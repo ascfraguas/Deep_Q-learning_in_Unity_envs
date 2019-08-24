@@ -1,32 +1,19 @@
-########################
-####### IMPORTS ########
-########################
 
 import numpy as np
 import random
 from collections import namedtuple, deque
-
-# Load the QNetwork class defined in model.py
-from model import QNetwork
-
-# Import basic resources from pytorch
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
 
-# Define hyperparameters
-BUFFER_SIZE = int(1e5)  # replay buffer size
-BATCH_SIZE = 64         # minibatch size
-GAMMA = 0.99            # discount factor
-TAU = 1e-3              # for soft update of target parameters
-LR = 5e-4               # learning rate 
-UPDATE_EVERY = 4        # how often to update the network
 
-# Indicate where to make the computations, either CPU or GPU (if available)
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
+# ------------------------------------------------------------------- #
+# ------------------------------------------------------------------- #
+# ------------------- ELEMENTS OF OUR AGENT --------------------------#
+# ------------------------------------------------------------------- #
+# ------------------------------------------------------------------- #
 
 
 
@@ -79,12 +66,83 @@ class ReplayBuffer:
         """Return the current size of internal memory."""
         return len(self.memory)
     
+
     
     
+########################
+###### Q-NETWORK  ######
+########################
+
+
+class QNetwork(nn.Module):
+    
+    ''' Actor (Policy) Model '''
+
+    def __init__(self, state_size, action_size, seed):
+        
+        ''' Initialization of parameters '''
+        
+        # Main parameters
+        super().__init__()
+        self.state_size = state_size
+        self.action_size = action_size
+        self.seed = torch.manual_seed(seed)
+        
+        # Define elements network
+        self.criterion = nn.MSELoss() 
+        self.hidden_1 = nn.Linear(self.state_size, 256)
+        self.hidden_2 = nn.Linear(256, 512)
+        self.hidden_3 = nn.Linear(512, 256)
+        self.output = nn.Linear(256, self.action_size)
+        self.sigmoid = nn.Sigmoid()
+        self.relu = nn.ReLU()
+        
+        #self.dropout = nn.Dropout(p=0.1)
+        #self.softmax = nn.Softmax(dim=1)
+        
+        
+    def forward(self, state):
+        
+        # Pass the input tensor through each of our operations
+        x = self.relu(self.hidden_1(state))
+        x = self.relu(self.hidden_2(x))
+        x = self.relu(self.hidden_3(x))
+        x = self.output(x)
+        
+        return x
+
+    
+    
+# ------------------------------------------------------------------- #
+# ------------------------------------------------------------------- #
+# -------------------------- LEARNING AGENT --------------------------#
+# ------------------------------------------------------------------- #
+# ------------------------------------------------------------------- #
+   
+
+
+
+###################################
+###### AGENT HYPERARAMETERS  ######
+###################################
+
+
+BUFFER_SIZE = int(1e5)  # replay buffer size
+BATCH_SIZE = 64         # minibatch size
+GAMMA = 0.99            # discount factor
+TAU = 1e-3              # for soft update of target parameters
+LR = 5e-4               # learning rate 
+UPDATE_EVERY = 4        # how often to update the network
+
+# Indicate where to make the computations, either CPU or GPU (if available)
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 
 ########################
-#### LEARNING AGENT ####
+###### THE AGENT  ######
 ########################
+
 
 class Agent():
 
@@ -173,38 +231,9 @@ class Agent():
         loss.backward()
         self.optimizer.step()
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        # ------------------- update target network ------------------- #
+        # Update target network
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)                     
 
 
 
-
-    
     
