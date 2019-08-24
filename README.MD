@@ -110,26 +110,17 @@ sampled experiences, using a learning rate of `LR = 5e-4`
 and target's weights for each parameter, using a factor `TAU=0.001`
 
 
+### 3.2. Agent's performance
 
+The agent solves the environment (i.e. score over 13 in the past 100 episodes) in a total of 917 episodes, with a final
+score of 13.03 (section 1 displays a gif showing actual agent's performance in the environment).
 
+<img src="images/performance_evolution.PNG" width="400" height="280" loc="center"/>
 
-The agent is initialized with two neural networks (i.e. local and target) with the same architecture. The architecture of the 
-network is composed of 3 hidden, fully connected layers of 256, 512, and 256 nodes each with ReLU activation functions. Input 
-layer takes in 37 sensory inputs delivered by the agent, and the output layer includes 4 linear nodes to model the Q-values of 
-each one of the 4 actions available to the agent.
-
-
-
-The file `DQN in the Banana environment.ipynb` hosts detailed description of the agent and its interaction
-with the environment, as well as the training algorithm and the results.
-
-The agent solves the environment (i.e. score over 13 in the past 100 episodes) in a total of XXXXX episodes.
-
-The agent is trained for a total of XXXX episodes before solving the environment, with a mean score of XXXX over the last 100 
-episodes. For each time step within each episode, the agent follows the next steps:
-
-While the current agent's specification is considered to adequately solve the environment, several improvements have 
-been identified as applicable to the algorithm, including double Q-networks, prioritized replay and dueling Q-networks.
+It can be observed in the performance evolution chart how the average performance rapidly plateaus after ~400 episodes
+and how the episode level performance is highly variable. While the current algorithm adequalty solves the environment,
+several improvements have been identified as applicable, including double Q-networks, prioritized replay and dueling 
+Q-networks, which are expected to significantly improve agent's performance.
 
 
 
