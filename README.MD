@@ -99,10 +99,13 @@ experiences from its buffer. To learn from these uncorrelated experiences, the s
 	3.1. *Compute local predictions (predicted values)*: The Q-value of the end state resulting from each action 
 (max Q-value across all possible future actions in `t+1`) is estimated using the target network. These values are 
 discounted with `GAMMA = 0.99` discount factor and added to the observed reward resulting from each action. 
+	
 	3.2. *Compute target predictions (target values)*: Target Q-values are computed on a forward pass for the target
 network for the sampled experiences
+	
 	3.3. *Update weights of local network*: The local network is updated in a batch gradient descent step for the
 sampled experiences, using a learning rate of `LR = 5e-4`
+	
 	3.4. *Soft update of target network*: Target network weights are soft-updated as a weighted mean of the local's 
 and target's weights for each parameter, using a factor `TAU=0.001`
 
