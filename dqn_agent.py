@@ -227,7 +227,7 @@ class Agent():
         
         # Now compute the loss wrt these new targets
         loss = self.qnetwork_local.criterion(Q_expected, Q_targets)
-        self.optimizer.zero_grad() # ?!
+        self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
         

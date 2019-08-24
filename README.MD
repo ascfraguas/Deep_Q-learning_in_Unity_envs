@@ -73,26 +73,57 @@ This section is the **technical report** for the project, detailing implementati
 
 ### 3.1. The algorithm
 
+The agent is trained over several episodes, during which it makes decisions based on its current belied and, afterwards,
+updates its knolwedge with the observed outcomes of its actions. Agent's belief is represented by two neural networks 
+(i.e. local and target) with the identical architecture:
+
+- 3 hidden, fully connected layers of 256, 512, and 256 nodes each with ReLU activation functions
+- Input layer takes in 37 sensory inputs delivered by the agent
+- Output layer includes 4 linear nodes to model the Q-values of each one of the 4 actions available to the agent
+
+The list below describes the algorithm in terms of the steps taken by the agent at each point in time during an episode,
+as well as the algorithm parameterization and and architectural choices made:
+
+1. **Choice of action**: The agent chooses an epsilon-greedy action w.r.t. its current policy. Specifically, the environment state
+is passed onto the local network, delivering estimates for the Q-value of each possible action. The agent picks the action with
+the highest Q-value with a probability `1-epsilon` where `epsilon` is the exploration parameter for the agent. This hyper-parameter
+is initialized with a value of `1`, decaying a `5%` of its current value in each episode up to a minimum of `0.01`.
+
+2. **Update replay buffer**: The `(state, action, reward)` tuple corresponding to the chosen action is stored in a 
+memory replay buffer. The replay buffer is initialized with a capacity of `BUFFER_SIZE = 100.000` experiences. When surpassed, older 
+experiences are overridden to store the news ones.
+
+3. **Learn from past experiences**: Every `4` time steps (action choices), the agent samples a batch of `BATCH_SIZE = 64` random
+experiences from its buffer. To learn from these uncorrelated experiences, the steps below are followed:
+
+	3.1. *Compute local predictions (predicted values)*: The Q-value of the end state resulting from each action 
+(max Q-value across all possible future actions in `t+1`) is estimated using the target network. These values are 
+discounted with `GAMMA = 0.99` discount factor and added to the observed reward resulting from each action. 
+	3.2. *Compute target predictions (target values)*: Target Q-values are computed on a forward pass for the target
+network for the sampled experiences
+	3.3. *Update weights of local network*: The local network is updated in a batch gradient descent step for the
+sampled experiences, using a learning rate of `LR = 5e-4`
+	3.4. *Soft update of target network*: Target network weights are soft-updated as a weighted mean of the local's 
+and target's weights for each parameter, using a factor `TAU=0.001`
+
+
+
+
+
 The agent is initialized with two neural networks (i.e. local and target) with the same architecture. The architecture of the 
 network is composed of 3 hidden, fully connected layers of 256, 512, and 256 nodes each with ReLU activation functions. Input 
 layer takes in 37 sensory inputs delivered by the agent, and the output layer includes 4 linear nodes to model the Q-values of 
 each one of the 4 actions available to the agent.
 
-The agent is trained for a total of XXXX episodes before solving the environment, with a mean score of XXXX over the last 100 
-episodes. For each time step within each episode, the agent follows the next steps:
 
-1. **Choice of action**: The agent chooses an epsilon-greedy action w.r.t. its current policy. Specifically, the environment state
-is passed onto the local network, delivering estimates for the Q-value of each possible action. The agent picks the action with
-the highest Q-value with a probability `1-epsilon` where `epsilon` is the exploration parameter for the agent. This hyper-parameter
-is initialized with a value of `1`, decaying a 5% of its current value in each episode up to a minimum of `0.01`.
-2. 
-The agent randomly samples 20 eperiences out of the buffer of 150 (state, action, reward) tuples, used to update the weights of 
-the agent's local network.
 
 The file `DQN in the Banana environment.ipynb` hosts detailed description of the agent and its interaction
 with the environment, as well as the training algorithm and the results.
 
 The agent solves the environment (i.e. score over 13 in the past 100 episodes) in a total of XXXXX episodes.
+
+The agent is trained for a total of XXXX episodes before solving the environment, with a mean score of XXXX over the last 100 
+episodes. For each time step within each episode, the agent follows the next steps:
 
 While the current agent's specification is considered to adequately solve the environment, several improvements have 
 been identified as applicable to the algorithm, including double Q-networks, prioritized replay and dueling Q-networks.
