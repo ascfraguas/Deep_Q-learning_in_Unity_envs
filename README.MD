@@ -75,11 +75,11 @@ This section is the **technical report** for the project, detailing implementati
 
 The agent is trained over several episodes, during which it makes decisions based on its current belied and, afterwards,
 updates its knolwedge with the observed outcomes of its actions. Agent's belief is represented by two neural networks 
-(i.e. local and target) with the identical architecture:
+(i.e. local and target) with the identical architecture. **Neural network arquitecure** used is as follows:
 
-- 3 hidden, fully connected layers of 256, 512, and 256 nodes each with ReLU activation functions
-- Input layer takes in 37 sensory inputs delivered by the agent
-- Output layer includes 4 linear nodes to model the Q-values of each one of the 4 actions available to the agent
+- `3 hidden, fully connected layers` of `256`, `512`, and `256` nodes each with `ReLU` activation functions
+- Input layer takes in `37` sensory inputs delivered by the agent
+- Output layer includes `4 linear` nodes to model the Q-values of each one of the `4` actions available to the agent
 
 The list below describes the algorithm in terms of the steps taken by the agent at each point in time during an episode,
 as well as the algorithm parameterization and and architectural choices made:
@@ -93,11 +93,11 @@ is initialized with a value of `1`, decaying a `5%` of its current value in each
 memory replay buffer. The replay buffer is initialized with a capacity of `BUFFER_SIZE = 100.000` experiences. When surpassed, older 
 experiences are overridden to store the news ones.
 
-3. **Learn from past experiences**: Every `4` time steps (action choices), the agent samples a batch of `BATCH_SIZE = 64` random
+3. **Learn from past experiences**: Every `UPDATE_EVERY = 4` time steps (action choices), the agent samples a batch of `BATCH_SIZE = 64` random
 experiences from its buffer. To learn from these uncorrelated experiences, the steps below are followed:
 
 	3.1. *Compute local predictions (predicted values)*: The Q-value of the end state resulting from each action 
-(max Q-value across all possible future actions in `t+1`) is estimated using the target network. These values are 
+(max Q-value across all possible future actions in t+1) is estimated using the target network. These values are 
 discounted with `GAMMA = 0.99` discount factor and added to the observed reward resulting from each action. 
 	
 	3.2. *Compute target predictions (target values)*: Target Q-values are computed on a forward pass for the target
