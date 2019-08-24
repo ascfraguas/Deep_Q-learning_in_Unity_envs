@@ -50,7 +50,7 @@ The file `DQN in the Banana environment.ipynb` walks the user through the entire
 
 1. **The environment and the agent**: Blocks 1 and 2 introduce these concepts and enable the user to see a example episode, with actions chosen at random
 2. **Training the agent**: Block 3 runs the algorithm for training the agent, displaying the results of the training process. This step creates the file `trained_agent.pth`, which contains the weights of the agent's optimized Q-network. See section 3.1. of this document for detail on the algorithm and training process
-3. **The agent in action**: Block 4 leverages the results from the training process stored in the file `checkpoint.pth` to initialize a trained agent, which we can see in action!
+3. **The agent in action**: Block 4 leverages the results from the training process stored in the file `trained_agent.pth` to initialize a trained agent, which we can see in action!
 
 Although the entire project is run from `DQN in the Banana environment.ipynb`, we can also find the following files in the project:
 
