@@ -123,7 +123,7 @@ score of 30.08 (section 1 displays a gif showing actual agent's performance in t
 
 <img src="images/performance_evolution.PNG" width="400" height="280" loc="center"/>
 
-The algorithm performs very well in this environment, although time to training can still be optimized by parallelizing experience across several agents. Once this is implemented, some other algorithms could be used as benchmarks including `A3C`.
+The algorithm performs very well in this environment, although time to training can still be optimized by parallelizing experience across several agents. Once this is implemented, some other algorithms could be used as benchmarks including `A3C`. Alternative benchmarks can be found comprehensively summarized in [this article](https://arxiv.org/abs/1604.06778)
 
 
 
