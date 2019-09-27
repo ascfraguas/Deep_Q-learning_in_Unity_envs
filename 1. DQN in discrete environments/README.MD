@@ -1,4 +1,4 @@
-# Deep Q-Learning on Unity environments
+# Deep Q Network algorithm in Unity environments
 
 -----------
 

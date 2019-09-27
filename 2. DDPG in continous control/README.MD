@@ -1,4 +1,4 @@
-# Deep Q-Learning on Unity environments
+# Deep Deterministic Policy Gradients in Unity environments
 
 -----------
 
