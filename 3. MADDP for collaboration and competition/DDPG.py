@@ -107,9 +107,9 @@ class Actor(nn.Module):
         if seed: self.seed = torch.manual_seed(seed)
 
         # Define network elements, inputs are the variables representing current state
-        self.fc1 = nn.Linear(state_size, 64)
-        self.fc2 = nn.Linear(64, 32)
-        self.fc3 = nn.Linear(32, action_size)
+        self.fc1 = nn.Linear(state_size, 256)
+        self.fc2 = nn.Linear(256, 256)
+        self.fc3 = nn.Linear(256, action_size)
 
         # Reset the parameters
         self.reset_parameters()
@@ -150,10 +150,9 @@ class Critic(nn.Module):
         if seed: self.seed = torch.manual_seed(seed)
 
         # Define network elements, inputs are the variables representing current state along with the action tuple
-        self.fc1 = nn.Linear(state_size*2, 128)
-        self.fc2 = nn.Linear(128+action_size, 64)
-        self.fc3 = nn.Linear(64, 16)
-        self.fc4 = nn.Linear(16, 1)
+        self.fc1 = nn.Linear(state_size*2, 256)
+        self.fc2 = nn.Linear(256+action_size, 256)
+        self.fc3 = nn.Linear(256, 1)
 
         # Reset the parameters
         self.reset_parameters()
@@ -164,8 +163,7 @@ class Critic(nn.Module):
 
         self.fc1.weight.data.uniform_(*hidden_init(self.fc1))
         self.fc2.weight.data.uniform_(*hidden_init(self.fc2))
-        self.fc3.weight.data.uniform_(*hidden_init(self.fc3))
-        self.fc4.weight.data.uniform_(-3e-3, 3e-3)
+        self.fc3.weight.data.uniform_(-3e-3, 3e-3)
 
     def forward(self, state, action):
 
@@ -174,8 +172,7 @@ class Critic(nn.Module):
         x = F.elu(self.fc1(state))
         x = torch.cat((x, action), dim=1)
         x = F.elu(self.fc2(x))
-        x = F.elu(self.fc3(x))
-        return self.fc4(x)
+        return self.fc3(x)
 
 
 
@@ -193,11 +190,11 @@ class Critic(nn.Module):
 ###### AGENT HYPERARAMETERS  ######
 ###################################
 
-BUFFER_SIZE = int(5e3)                   # replay buffer size
+BUFFER_SIZE = int(1e4)                   # replay buffer size
 BATCH_SIZE = 128                         # minibatch size
 GAMMA = 0.99                             # discount factor
 TAU = 1e-3                               # for soft update of target parameters
-LR_ACTOR, LR_CRITIC = 1e-3, 5e-4         # learning rate of the networks
+LR_ACTOR, LR_CRITIC = 2e-4, 3e-4         # learning rate of the networks
 UPDATE_EVERY = 1                         # how often to update the network
 
 
@@ -305,7 +302,7 @@ class Agent():
         next_states = experiences[3][self.agent_index]
         dones       = experiences[4][self.agent_index]
         
-        # Experience for critic
+        # Experiences for critic
         states_for_critic      = experiences[0][0]
         actions_for_critic     = experiences[1][0]
         rewards_for_critic     = experiences[2][0]
@@ -320,7 +317,8 @@ class Agent():
 
         # Estimate boostrapped Q-values of (s, a) pairs using estimated Q-values for (next_s, next_a) pairs and actual rewards
         Q_targets_next = self.critic_target(next_states_for_critic, actions_next)
-        Q_targets = rewards_for_critic.sum(dim=1).unsqueeze(dim=1) + (gamma * Q_targets_next * (1 - dones_for_critic))
+        #Q_targets = rewards_for_critic.sum(dim=1).unsqueeze(dim=1) + (gamma * Q_targets_next * (1 - dones_for_critic))
+        Q_targets = rewards + (gamma * Q_targets_next * (1 - dones_for_critic))
         
         # Get the estimated Q-values for the states and calculate loss function
         Q_expected = self.critic_local(states_for_critic, actions)
