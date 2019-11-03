@@ -16,7 +16,7 @@ In this project we train two agents to play tennis. The environment contains two
 
 See below an actual run of the environment by the succesfuly trained agents
 
-<img src="images/trained_agents.gif" width="400" height="280" loc="center"/>
+<img src="images/trained_agents.gif" width="600" height="280" loc="center"/>
 
 
 The agent in this project is trained using a custom implementation of the `Multi-Agent Deep Deterministic Policy Gradients` algorithm. Refer to section 4 for technical detail on the agent's configuration and the training algorithm.
@@ -122,7 +122,7 @@ and target's weights for each parameter, using a factor `TAU=0.001`
 The agents solve the environment (i.e. score over `0.5` in the past `100` episodes) in a total of `1240` episodes, with a final
 score of 0.51 (section 1 displays a gif showing actual trained agents playing tennis).
 
-<img src="images/performance_evolution.PNG" width="400" height="280" loc="center"/>
+<img src="images/performance_evolution.PNG" width="600" height="280" loc="center"/>
 
 The learning process seems fairly estable and the agents performance is satisfactory. We can observe interesting behaviors such as repeatedly moving back and forth after hitting the ball (red agent) or performing unnecessary jumps (blue agent). Since the agents are never optimized for efficiency on their actions these behaviors are reasonable. Also, at the time the training stopped the agents were learning at an accelerated rate. Although it could be interesting letting them train for longer to see how much better their performance can get, some sort of timeout should be introduced to limit the time of each episode, while this would affect the density
 bad moves to learn from. Further developments should include prioritized replay to fix this potential issue.
